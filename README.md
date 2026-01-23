@@ -29,6 +29,7 @@ I made this so that I compose with other tools in order to send events to my scr
 
 - **Gradient borders** - Diagonal gradient from primary to secondary color so it looks nice.
 - **Tint mode** - Optional screen-wide color overlay.
+- **100% CLI based** - You can chang border size, color, tint... all from the command line.
 - **12 color presets** - Or use any hex color.
 - **Unix composability** - Use with other tools/scripts to send events to your screen.
 - **Could in theory kill you** - Be careful with the rainbow command in case of epilepsy.
