@@ -1,10 +1,10 @@
 <h1 align="center">Borderline LSD</h1>
 
 <p align="center">
-  <img src="https://imgs.search.brave.com/phWLSVjODdLbJvlBdr3LFuDC7vSjkKXuZc7NAfvxjkU/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9naWZk/Yi5jb20vaW1hZ2Vz/L2hpZ2gvaHlwbm9z/aXMtY3JlZXB5LWth/YS1zbmFrZS10aGUt/anVuZ2xlLWJvb2st/MmtpaXhpNHFzNGR0/bGlidy5naWY.gif" width="400"/>
+  <img src="other/assets/cli_demo.GIF" width="900"/>
 </p>
 
-<p align="center">Screen borders for the clinically insane</p>
+<p align="center">Screen border lines for neurotics</p>
 
 <p align="center">
   <a href="https://github.com/DeprecatedLuar/borderline-lsd/stargazers">
@@ -17,24 +17,28 @@
 
 ---
 
-QuickShell overlay that wraps your screen in a gradient border. Useful for screen recording, focus modes, or just vibes.
+So, blsd is basically a quickshell overlay linked to a bash cli. 
+
+I made this so that I compose with other tools in order to send events to my screen. So its useful for screen recording, focus modes, or just vibes.
 
 ---
 
-## Features
+## Mind Boggling Features
 
-- **Gradient borders** - Diagonal gradient from primary to secondary color
-- **Click-through** - Doesn't steal focus or block input
-- **Live reload** - Changes apply instantly via JSON config
-- **Tint mode** - Optional screen-wide color overlay
-- **Asymmetric borders** - Thicker sides, thinner top/bottom
-- **12 color presets** - Or use any hex color
+<img src="other/assets/mind_boggling.jpg" alt="Mind boggling" align="right" width="200"/>
+
+- **Gradient borders** - Diagonal gradient from primary to secondary color so it looks nice.
+- **Tint mode** - Optional screen-wide color overlay.
+- **12 color presets** - Or use any hex color.
+- **Unix composability** - Use with other tools/scripts to send events to your screen.
+- **Could in theory kill you** - Be careful with the rainbow command in case of epilepsy.
 
 ---
 
 ## Installation
 
-Requires [QuickShell](https://quickshell.outfoxxed.me/)
+> [!IMPORTANT]
+> Requires [QuickShell](https://quickshell.outfoxxed.me/) - So you gotta figure that out first.
 
 ```bash
 # Clone to quickshell config
@@ -53,7 +57,8 @@ quickshell -c blsd
 
 ```bash
 blsd yellow              # Set color (gradient preset)
-blsd "#ff5500"           # Custom hex color
+blsd "#ff5500"           # Custom hex (flat)
+blsd "#aa0000" "#ff4444" # Custom hex gradient
 blsd -b 10 red           # Set border thickness + color
 blsd hide                # Hide overlay
 blsd show                # Show overlay
@@ -61,9 +66,11 @@ blsd show                # Show overlay
 
 ## Commands
 
+
 | Command | Description |
 |---------|-------------|
-| `blsd <color>` | Set color preset or hex value |
+| `blsd <color>` | Set color preset or hex (flat) |
+| `blsd <#hex> <#hex2>` | Custom hex gradient |
 | `blsd -b <px> <color>` | Set border thickness then color |
 | `blsd hide` | Hide overlay |
 | `blsd show` | Show overlay |
@@ -73,16 +80,23 @@ blsd show                # Show overlay
 
 ## Color Presets
 
+I made a gradient for each preset so it looks pretty no matter the color. So these are the ones:
+
 `yellow` `red` `blue` `green` `orange` `purple` `pink` `cyan` `magenta` `teal` `white` `black`
 
-Each preset includes a hue-shifted gradient pair for depth.
+<p align="center">
+  <img src="other/assets/rainbow_demo2.GIF" width="900"/>
+</p>
+
+
+
 
 <details>
 <summary>Config Properties</summary>
 
 <br>
 
-Config lives at `/tmp/blsd.json` and is watched for live changes.
+The config lives at `/tmp/blsd.json` and is watched by quickshell for live changes.
 
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
