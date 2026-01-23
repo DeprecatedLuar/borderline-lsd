@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+# blsd - screen overlay controller
+
+# Auto-symlink to PATH if not already
+if ! command -v blsd &>/dev/null; then
+    mkdir -p ~/.local/bin
+    ln -sf "$(realpath "$0")" ~/.local/bin/blsd
+    echo "Symlinked to ~/.local/bin/blsd"
+fi
+
+CFG="/tmp/blsd.json"
+[[ -f "$CFG" ]] || echo '{}' > "$CFG"
+
+T=1  # thickness multiplier
+
+set_val() {
+    tmp=$(mktemp)
+    jq --arg v "$2" ".$1 = \$v" "$CFG" > "$tmp" && mv "$tmp" "$CFG"
+}
+
+set_num() {
+    tmp=$(mktemp)
+    jq --argjson v "$2" ".$1 = \$v" "$CFG" > "$tmp" && mv "$tmp" "$CFG"
+}
+
+set_color() {
+    set_val color "$1"
+    set_val color2 "$2"
+    set_num tint 0.05
+    set_num visible true
+}
+
+set_border() {
+    set_num borderX "$1"
+    set_num borderY "$(($1 / 2))"
+    set_num radius "$(($1 * 2))"
+}
+
+# Parse all args (flags can be anywhere)
+TINT=""
+BORDER=""
+ARG1=""
+ARG2=""
+SPEED=""
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -b|--border) BORDER="$2"; shift 2 ;;
+        -t|--tint)   TINT="$2"; shift 2 ;;
+        rainbow)     ARG1="rainbow"; SPEED="${2:-0.5}"; shift; [[ "${1:-}" =~ ^[0-9.]+$ ]] && shift ;;
+        *)           [[ -z "$ARG1" ]] && ARG1="$1" || ARG2="$1"; shift ;;
+    esac
+done
+
+[[ -n "$BORDER" ]] && set_border "$BORDER"
+
+# Rainbow mode (loops until hidden)
+if [[ "$ARG1" == "rainbow" ]]; then
+    set_num visible true
+    while [[ "$(jq -r '.visible' "$CFG")" != "false" ]]; do
+        for c in yellow red purple blue cyan green orange pink magenta teal; do
+            [[ "$(jq -r '.visible' "$CFG")" == "false" ]] && exit 0
+            blsd ${BORDER:+-b $BORDER} "$c"
+            sleep "$SPEED"
+        done
+    done
+    exit 0
+fi
+
+case "$ARG1" in
+    hide)   set_num visible false ;;
+    show)   set_num visible true ;;
+    borderx) set_num borderX "$ARG2" ;;
+    bordery) set_num borderY "$ARG2" ;;
+    radius) set_num radius "$ARG2" ;;
+    white)  set_color "#e0e0e0" "#ffffff" ;;
+    black)  set_color "#0a0a0a" "#2a2a2a" ;;
+    yellow) set_color "#ff9500" "#ffdd00" ;;
+    red)    set_color "#cc2244" "#ff5566" ;;
+    blue)   set_color "#2255cc" "#44aaff" ;;
+    green)  set_color "#11aa55" "#44dd88" ;;
+    orange) set_color "#dd4400" "#ff8833" ;;
+    purple) set_color "#6622cc" "#aa55ff" ;;
+    pink)   set_color "#cc2288" "#ff66bb" ;;
+    cyan)   set_color "#0088aa" "#22ddff" ;;
+    magenta) set_color "#aa0088" "#ff44cc" ;;
+    teal)   set_color "#008877" "#22ccaa" ;;
+    \#*)    set_color "$ARG1" "${ARG2:-$ARG1}" ;;
+    *)      echo "Usage: blsd [-b px] [-t 0-1] <color|#hex [#hex2]|hide|show>" ;;
+esac
+
+# Apply tint override after color (which sets default tint)
+[[ -n "$TINT" ]] && set_num tint "$TINT"
+
+exit 0
