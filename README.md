@@ -19,7 +19,7 @@
 
 So, blsd is basically a quickshell overlay linked to a bash cli. 
 
-I made this so that I compose with other tools in order to send events to my screen. So its useful for screen recording, focus modes, or just vibes.
+I made this so that I compose with other tools in order to send events to my screen. So its useful for screen recording, focus modes, or just vibes. (Btw this is the twin project of [tcpeek](https://github.com/DeprecatedLuar/tcpeek))
 
 ---
 
